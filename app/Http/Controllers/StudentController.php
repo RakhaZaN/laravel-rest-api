@@ -17,6 +17,10 @@ class StudentController extends Controller
     {
         $student = Student::all();
 
+        if (count($student) == 0) {
+            return $this->response(404, 'Student resource not available yet');
+        }
+
         return $this->response(200, 'Get all students', $student);
     }
 
@@ -64,12 +68,11 @@ class StudentController extends Controller
      */
     public function update(Request $request, Student $student)
     {
-
         $validated = Validator::make($request->all(), [
-            'nama' => 'required',
-            'nim' => 'required',
-            'email' => 'required',
-            'jurusan' => 'required',
+            'nama' => 'nullable',
+            'nim' => 'nullable',
+            'email' => 'nullable',
+            'jurusan' => 'nullable',
         ]);
 
         if ($validated->fails()) {
@@ -78,7 +81,7 @@ class StudentController extends Controller
 
         $update = $student->update($request->all());
 
-        return $update ? $this->response(200, 'Student is updated successfully', $request->all()) : $this->response(400, 'Something wrong');
+        return $update ? $this->response(200, 'Student is updated successfully', $student) : $this->response(400, 'Something wrong');
     }
 
     /**
